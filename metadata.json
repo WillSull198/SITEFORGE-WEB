@@ -1,0 +1,6 @@
+{
+  "name": "SiteForge",
+  "description": "The operations layer for AU builders. Streamline variations, approvals, and site events next to Buildxact.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["Full-stack", "AI-powered"]
+}

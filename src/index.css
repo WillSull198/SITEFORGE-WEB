@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-bg-primary: #FAFAF7;
+  --color-bg-card: #FFFFFF;
+  --color-bg-dark: #0B0E13;
+  --color-bg-dark-elev: #1A1F2A;
+  --color-bg-amber-soft: #FFF8EC;
+  --color-bg-tinted: #F4F2EC;
+
+  --color-border-light: #E8E5DD;
+  --color-border-strong: #C8C4B8;
+  --color-border-dark: #2A2F3A;
+
+  --color-text-primary: #0B0E13;
+  --color-text-secondary: #4A4E58;
+  --color-text-tertiary: #767B85;
+  --color-text-inverse: #FAFAF7;
+  --color-text-inverse-muted: #A8ACB5;
+
+  --color-amber-base: #D97706;
+  --color-amber-dark: #92400E;
+  --color-amber-bright: #F59E0B;
+
+  --color-semantic-green: #059669;
+  --color-semantic-red: #DC2626;
+
+  --radius-card: 12px;
+  --radius-btn: 8px;
+  --radius-badge: 4px;
+
+  --shadow-sm: 0 1px 3px rgba(11,14,19,0.06), 0 1px 2px rgba(11,14,19,0.04);
+  --shadow-md: 0 4px 12px rgba(11,14,19,0.08), 0 2px 4px rgba(11,14,19,0.04);
+  --shadow-lg: 0 12px 40px rgba(11,14,19,0.10), 0 4px 12px rgba(11,14,19,0.06);
+}
+
+@layer base {
+  body {
+    @apply bg-bg-primary text-text-primary font-sans antialiased;
+  }
+  
+  h1 {
+    @apply text-[36px] md:text-[54px] lg:text-[64px] leading-[1.05] font-extrabold tracking-[-0.025em];
+  }
+  h2 {
+    @apply text-[28px] md:text-[44px] leading-[1.15] font-bold tracking-[-0.015em];
+  }
+  h3 {
+    @apply text-[22px] md:text-[28px] leading-[1.25] font-semibold;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply inline-block px-3 py-1 bg-bg-amber-soft border border-amber-base/20 text-amber-base text-[11px] font-bold uppercase tracking-[0.1em] rounded-full mb-6 w-fit;
+  }
+  .lead-text {
+    @apply text-[18px] md:text-[20px] leading-[1.6] font-normal text-text-secondary;
+  }
+  .btn-primary {
+    @apply bg-bg-dark text-white px-8 py-4 rounded-btn font-bold flex items-center justify-center hover:bg-black transition-colors;
+  }
+  .btn-accent {
+    @apply bg-amber-base text-white px-8 py-4 rounded-btn font-bold flex items-center justify-center hover:bg-amber-dark transition-colors shadow-sm;
+  }
+  .btn-secondary {
+    @apply bg-white border border-border-strong text-text-primary px-8 py-4 rounded-btn font-bold flex items-center justify-center hover:bg-bg-tinted transition-colors;
+  }
+}
