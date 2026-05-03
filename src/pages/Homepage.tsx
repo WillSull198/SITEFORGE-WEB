@@ -352,7 +352,7 @@ export default function Homepage() {
             <p className="text-text-secondary font-medium leading-relaxed mb-6">
               Already using Buildxact? Good. Keep it. SiteForge connects seamlessly to projects, cost codes, and invoicing, handling the operations workflow that Buildxact wasn't built for.
             </p>
-            <Link to="/buildxact" className="text-amber-dark font-bold flex items-center gap-2 hover:underline">
+            <Link to="/product/buildxact-connector" className="text-amber-dark font-bold flex items-center gap-2 hover:underline">
               Learn about the integration <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

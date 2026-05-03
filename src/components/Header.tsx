@@ -9,10 +9,12 @@ const navigation = [
     { name: "ClientFlow", href: "/product/clientflow" },
     { name: "Site Passport", href: "/product/site-passport" },
     { name: "Presence", href: "/product/presence" },
+    { name: "Commercial Engine", href: "/product/engine" },
+    { name: "Teams Layer", href: "/product/teams" },
     { name: "Buildxact Connector", href: "/product/buildxact-connector" },
   ]},
   { name: "Pricing", href: "/pricing" },
-  { name: "Resources", href: "/resources" },
+  { name: "Pilot", href: "/pilot" },
   { name: "About", href: "/about" },
 ];
 

@@ -12,10 +12,13 @@ import BuildxactConnector from "./pages/BuildxactConnector";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Security from "./pages/Security";
+import Legal from "./pages/Legal";
+import Privacy from "./pages/Privacy";
 import CompareBuildxact from "./pages/CompareBuildxact";
 import CompareProcore from "./pages/CompareProcore";
 import Pilot from "./pages/Pilot";
 import Demo from "./pages/Demo";
+import Login from "./pages/Login";
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -51,7 +54,10 @@ export default function App() {
           <Route path="/product/buildxact-connector" element={<BuildxactConnector />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/security" element={<Security />} />
+          <Route path="/legal" element={<Legal />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/compare/buildxact" element={<CompareBuildxact />} />
           <Route path="/compare/procore" element={<CompareProcore />} />
           <Route path="/pilot" element={<Pilot />} />

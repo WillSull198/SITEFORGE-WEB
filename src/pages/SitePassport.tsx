@@ -13,6 +13,8 @@ import {
   ArrowRight
 } from "lucide-react";
 
+import ScannerDemo from "../components/ScannerDemo";
+
 export default function SitePassportPage() {
   return (
     <div className="w-full">
@@ -33,14 +35,10 @@ export default function SitePassportPage() {
             </div>
           </div>
           
-          <div className="relative">
-             <div className="bg-bg-dark rounded-card p-12 aspect-square flex flex-col items-center justify-center text-center space-y-6 shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-base/20 to-transparent opacity-50" />
-                <div className="w-48 h-48 bg-white p-4 rounded-xl relative z-10 shadow-lg">
-                   <QrCode className="w-full h-full text-text-primary" />
-                </div>
-                <p className="text-white font-bold text-lg relative z-10 tracking-tight">SCAN FOR SITE ACCESS</p>
-                <div className="absolute top-4 right-4 bg-semantic-green text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+          <div className="relative aspect-square">
+             <div className="absolute inset-0 bg-bg-dark rounded-card overflow-hidden shadow-2xl relative group">
+                <ScannerDemo />
+                <div className="absolute top-4 right-4 bg-semantic-green text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 z-30 pointer-events-none">
                    <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                    LIVE SITE GATE
                 </div>

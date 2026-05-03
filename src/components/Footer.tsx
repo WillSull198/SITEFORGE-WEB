@@ -67,8 +67,8 @@ export default function Footer() {
           © {new Date().getFullYear()} SiteForge Operations Pty Ltd. ABN 28 642 189 055.
         </p>
         <div className="flex gap-8">
-          <Link to="/security" className="hover:text-white transition-colors">Legal</Link>
-          <Link to="/security" className="hover:text-white transition-colors">Privacy</Link>
+          <Link to="/legal" className="hover:text-white transition-colors">Legal</Link>
+          <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           <Link to="/security" className="hover:text-white transition-colors">Security</Link>
         </div>
       </div>

@@ -4,6 +4,25 @@ import { motion } from "motion/react";
 import { Check, Send, Loader2, ArrowRight, ShieldCheck, Mail, Smartphone, Clock, Database } from "lucide-react";
 
 export default function DemoPage() {
+  const [step, setStep] = useState(1); // 1: Calendar, 2: Details, 3: Success
+  const [selectedTime, setSelectedTime] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
+    setStep(2);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      setStep(3);
+    }, 1500);
+  };
+
   return (
     <div className="w-full bg-white">
       <section className="pt-40 pb-32 px-6 max-w-7xl mx-auto">
@@ -72,33 +91,112 @@ export default function DemoPage() {
           <div className="relative">
              <div className="bg-bg-tinted rounded-card p-1 border border-border-light shadow-2xl relative overflow-hidden">
                 <div className="bg-white rounded-[10px] p-10 h-full min-h-[600px] flex flex-col">
-                   <div className="text-center mb-10 space-y-2">
-                      <h3 className="text-2xl font-bold">Select a time</h3>
-                      <p className="text-sm text-text-secondary">Select 15 minutes that work for you.</p>
-                   </div>
                    
-                   {/* Simplified Calendar Grid Mock */}
-                   <div className="flex-1 space-y-8">
-                      <div className="grid grid-cols-7 text-center text-[10px] font-bold text-text-tertiary uppercase tracking-widest">
-                         <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span className="opacity-40">S</span><span className="opacity-40">S</span>
-                      </div>
-                      <div className="grid grid-cols-7 gap-y-6 text-center text-sm font-bold">
-                         {Array.from({ length: 31 }).map((_, i) => (
-                           <button key={i} className={`p-2 rounded-lg transition-colors ${i === 14 ? 'bg-amber-base text-white hover:bg-amber-dark' : 'text-text-primary hover:bg-bg-tinted'}`}>
-                              {i + 1}
+                   {step === 1 && (
+                     <motion.div 
+                       initial={{ opacity: 0 }}
+                       animate={{ opacity: 1 }}
+                       className="flex-1 flex flex-col"
+                     >
+                       <div className="text-center mb-10 space-y-2">
+                          <h3 className="text-2xl font-bold">Select a time</h3>
+                          <p className="text-sm text-text-secondary">Select 15 minutes that work for you.</p>
+                       </div>
+                       
+                       <div className="flex-1 space-y-8">
+                          <div className="grid grid-cols-7 text-center text-[10px] font-bold text-text-tertiary uppercase tracking-widest">
+                             <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span className="opacity-40">S</span><span className="opacity-40">S</span>
+                          </div>
+                          <div className="grid grid-cols-7 gap-y-6 text-center text-sm font-bold">
+                             {Array.from({ length: 31 }).map((_, i) => (
+                               <button 
+                                 key={i} 
+                                 className={`p-2 rounded-lg transition-colors ${i === 14 ? 'bg-amber-base text-white hover:bg-amber-dark' : 'text-text-primary hover:bg-bg-tinted'}`}
+                               >
+                                  {i + 1}
+                               </button>
+                             ))}
+                          </div>
+                          
+                          <div className="space-y-4 pt-8 border-t border-bg-tinted">
+                             <div className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Morning Slots</div>
+                             <div className="grid grid-cols-3 gap-2 text-xs font-bold">
+                                {["08:15 AM", "09:30 AM", "11:45 AM"].map(time => (
+                                   <button 
+                                     key={time} 
+                                     onClick={() => handleTimeSelect(time)}
+                                     className="py-2 border border-border-light rounded hover:border-amber-base hover:text-amber-base transition-colors"
+                                   >
+                                      {time}
+                                   </button>
+                                ))}
+                             </div>
+                          </div>
+                       </div>
+                     </motion.div>
+                   )}
+
+                   {step === 2 && (
+                     <motion.div 
+                       initial={{ opacity: 0, x: 20 }}
+                       animate={{ opacity: 1, x: 0 }}
+                       className="flex-1 flex flex-col"
+                     >
+                        <button 
+                          onClick={() => setStep(1)}
+                          className="text-xs font-bold text-text-tertiary uppercase tracking-widest mb-6 hover:text-text-primary flex items-center gap-2"
+                        >
+                           &larr; Back to calendar
+                        </button>
+                        <div className="mb-10">
+                           <h3 className="text-2xl font-bold mb-2">Your details</h3>
+                           <p className="text-sm text-text-secondary">Booking for <span className="text-amber-base font-bold">{selectedTime} on May 15th</span></p>
+                        </div>
+                        <form onSubmit={handleFormSubmit} className="space-y-6">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Full Name</label>
+                              <input required type="text" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors" placeholder="Dave Smith" />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Company Email</label>
+                              <input required type="email" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors" placeholder="dave@company.com.au" />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Construction Scale</label>
+                              <select className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors">
+                                 <option>1-5 Homes / Year</option>
+                                 <option>5-20 Homes / Year</option>
+                                 <option>20-100 Homes / Year</option>
+                                 <option>100+ Homes / Year</option>
+                              </select>
+                           </div>
+                           <button 
+                             disabled={loading}
+                             type="submit" 
+                             className="btn-accent w-full py-5 text-lg flex items-center justify-center gap-3"
+                           >
+                              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Request Invite <Send className="w-4 h-4" /></>}
                            </button>
-                         ))}
-                      </div>
-                      
-                      <div className="space-y-4 pt-8 border-t border-bg-tinted">
-                         <div className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Morning Slots</div>
-                         <div className="grid grid-cols-3 gap-2 text-xs font-bold">
-                            {["08:15 AM", "09:30 AM", "11:45 AM"].map(time => (
-                               <button key={time} className="py-2 border border-border-light rounded hover:border-amber-base hover:text-amber-base transition-colors">{time}</button>
-                            ))}
-                         </div>
-                      </div>
-                   </div>
+                        </form>
+                     </motion.div>
+                   )}
+
+                   {step === 3 && (
+                     <motion.div 
+                       initial={{ opacity: 0, scale: 0.9 }}
+                       animate={{ opacity: 1, scale: 1 }}
+                       className="flex-1 flex flex-col items-center justify-center text-center space-y-6"
+                     >
+                        <div className="w-20 h-20 bg-semantic-green/10 text-semantic-green rounded-full flex items-center justify-center mb-4">
+                           <Check className="w-10 h-10" />
+                        </div>
+                        <h3 className="text-3xl font-extrabold tracking-tightest">You're in.</h3>
+                        <p className="text-text-secondary max-w-xs mx-auto">
+                           We've sent a calendar invitation for {selectedTime} on May 15th to your email. Check your inbox (and spam just in case).
+                        </p>
+                        <Link to="/" className="text-amber-base font-bold hover:underline pt-10">Back to homepage</Link>
+                     </motion.div>
+                   )}
 
                    <p className="mt-10 text-xs text-text-tertiary text-center leading-relaxed">
                       Prefer email? Contact us at <a href="mailto:demo@siteforge.app" className="text-text-primary font-bold">demo@siteforge.app</a>
@@ -111,7 +209,7 @@ export default function DemoPage() {
                 <div className="flex justify-center -space-x-1">
                    {[1,2,3].map(i => (
                      <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-bg-tinted overflow-hidden">
-                        <img src={`https://i.pravatar.cc/100?img=${i+40}`} alt="User" />
+                        <img src={`https://i.pravatar.cc/100?img=${i+40}`} alt="User" referrerPolicy="no-referrer" />
                      </div>
                    ))}
                 </div>

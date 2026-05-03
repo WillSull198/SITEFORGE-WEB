@@ -5,6 +5,7 @@ import {
   MapPin, 
   Clock, 
   ShieldAlert, 
+  ShieldCheck,
   Scale, 
   Eye, 
   FileCheck,
@@ -12,6 +13,8 @@ import {
   AlertCircle,
   FileText
 } from "lucide-react";
+
+import ComplianceGateDemo from "../components/ComplianceGateDemo";
 
 export default function PresencePage() {
   return (
@@ -22,47 +25,27 @@ export default function PresencePage() {
           <div className="space-y-8">
             <div className="eyebrow">PILLAR 3 OF 6 · PRESENCE VERIFICATION</div>
             <h1 className="text-balance text-text-primary">
-              Presence Verification. <br/>
-              <span className="text-amber-base">Disclosed. Compliant.</span> Defensible.
+              Defensible attendance. <br/>
+              <span className="text-amber-base">NSW WSA 2005</span> compliant gates.
             </h1>
             <p className="lead-text">
-              SiteForge Presence Verification gives you evidence of workforce attendance for payroll disputes, Fair Work compliance, and site documentation. It is disclosed-only and includes mandatory compliance gates under the NSW Workplace Surveillance Act 2005.
+              Stop relying on hand-written sign-in sheets. Presence Verification uses multi-factor evidence — GPS, photo, and device ID — to create a hash-chained audit trail of exactly who was on site and when. Defend against payroll disputes and meet government compliance instantly.
             </p>
             <div className="flex flex-wrap gap-4">
                <Link to="/demo" className="btn-primary px-8">Book a Demo</Link>
             </div>
           </div>
           
-          <div className="relative">
-             <div className="bg-bg-tinted rounded-card p-1 text-border-strong border border-border-light shadow-2xl relative overflow-hidden group">
-                <div className="bg-white rounded-[10px] p-8 space-y-6">
-                   <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-text-tertiary">
-                      <span>Attendance Record</span>
-                      <span className="text-semantic-green">GPS Verified</span>
-                   </div>
-                   <div className="space-y-4">
-                      {[
-                        { name: "M. Hargraves", in: "07:02 AM", out: "16:45 PM", status: "Verified" },
-                        { name: "S. O'Connell", in: "06:55 AM", out: "16:30 PM", status: "Verified" },
-                        { name: "D. Smith", in: "07:15 AM", out: "17:00 PM", status: "Anomaly" }
-                      ].map((row, i) => (
-                        <div key={i} className="flex items-center justify-between py-3 border-b border-bg-tinted last:border-0">
-                           <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-bg-tinted rounded-full flex items-center justify-center text-xs font-bold text-text-secondary">
-                                 {row.name.charAt(0)}
-                              </div>
-                              <span className="text-sm font-bold text-text-primary">{row.name}</span>
-                           </div>
-                           <div className="flex gap-6 text-[11px] font-mono font-medium text-text-tertiary">
-                              <span>IN: {row.in}</span>
-                              <span>OUT: {row.out}</span>
-                           </div>
-                           <div className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${row.status === 'Verified' ? 'bg-semantic-green/10 text-semantic-green' : 'bg-amber-base/10 text-amber-base'}`}>
-                              {row.status}
-                           </div>
-                        </div>
-                      ))}
-                   </div>
+          <div className="relative aspect-[4/5] max-w-sm mx-auto w-full">
+             <ComplianceGateDemo />
+             {/* Floating Trust Indicator */}
+             <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-card border border-border-light shadow-xl flex items-center gap-3">
+                <div className="w-10 h-10 bg-semantic-green/10 text-semantic-green rounded-full flex items-center justify-center">
+                   <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                   <div className="text-[10px] font-black uppercase tracking-widest text-text-primary">Compliance Status</div>
+                   <div className="text-xs text-semantic-green font-bold italic tracking-tighter">WSA-2005 VALIDATED</div>
                 </div>
              </div>
           </div>
