@@ -6,7 +6,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-bg-primary flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-white rounded-card border border-border-light shadow-2xl p-10 space-y-8 text-center">
-        <div className="w-20 h-20 bg-amber-soft rounded-full flex items-center justify-center mx-auto">
+        <div className="w-20 h-20 bg-bg-amber-soft rounded-full flex items-center justify-center mx-auto">
           <ShieldCheck className="w-10 h-10 text-amber-base" />
         </div>
         <div className="space-y-4">

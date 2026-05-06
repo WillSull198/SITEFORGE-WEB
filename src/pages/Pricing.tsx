@@ -207,7 +207,7 @@ export default function PricingPage() {
       <section className="py-32 px-6 border-t border-border-light text-center">
         <div className="max-w-3xl mx-auto space-y-8">
            <h2 className="text-4xl font-bold">Trialing is for toys. Pilots are for builders.</h2>
-           <p className="lead-text">Join 28 pilot builders recovering variations at scale today.</p>
+           <p className="lead-text">Join 40+ pilot builders recovering variations at scale today.</p>
            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link to="/pilot" className="btn-accent py-4 px-10 text-lg">Start the Pilot Program</Link>
               <Link to="/demo" className="btn-secondary py-4 px-10 text-lg">Book a Demo Call</Link>

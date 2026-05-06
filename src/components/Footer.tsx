@@ -19,8 +19,8 @@ export default function Footer() {
             Bridging the gap between site events and commercial recovery. Specifically built for the Australian residential construction industry.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-amber-base hover:text-white transition-all"><Linkedin className="w-5 h-5" /></a>
-            <a href="#" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-amber-base hover:text-white transition-all"><Mail className="w-5 h-5" /></a>
+            <a href="https://www.linkedin.com/company/siteforge" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-amber-base hover:text-white transition-all"><Linkedin className="w-5 h-5" /></a>
+            <a href="mailto:william@sullivan.net.au" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-amber-base hover:text-white transition-all"><Mail className="w-5 h-5" /></a>
           </div>
         </div>
 

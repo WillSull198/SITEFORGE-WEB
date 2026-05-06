@@ -19,6 +19,7 @@ import CompareProcore from "./pages/CompareProcore";
 import Pilot from "./pages/Pilot";
 import Demo from "./pages/Demo";
 import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -62,8 +63,7 @@ export default function App() {
           <Route path="/compare/procore" element={<CompareProcore />} />
           <Route path="/pilot" element={<Pilot />} />
           <Route path="/demo" element={<Demo />} />
-          {/* Placeholder for other routes */}
-          <Route path="*" element={<Homepage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </Router>

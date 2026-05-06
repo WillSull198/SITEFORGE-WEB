@@ -1,13 +1,43 @@
 import { motion } from "motion/react";
 import React, { useState } from "react";
-import { CheckCircle2, ArrowRight, ShieldCheck, Database, Zap, Sparkles } from "lucide-react";
+import { CheckCircle2, ArrowRight, ShieldCheck, Database, Zap, Sparkles, Loader2 } from "lucide-react";
 
 export default function PilotPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "pilot",
+          company: formData.get("company"),
+          name: formData.get("name"),
+          email: formData.get("email"),
+          activeProjects: formData.get("activeProjects"),
+          source: formData.get("source"),
+          painPoint: formData.get("painPoint"),
+        }),
+      });
+      
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        alert("Something went wrong. Please email william@sullivan.net.au directly.");
+      }
+    } catch (err) {
+      console.error("Pilot submit error:", err);
+      alert("Network error. Please email william@sullivan.net.au directly.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -61,21 +91,21 @@ export default function PilotPage() {
                          <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
                                <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Company Name</label>
-                               <input required className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base" placeholder="Hargraves Building" />
+                               <input required name="company" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base" placeholder="Hargraves Building" />
                             </div>
                             <div className="space-y-1.5">
                                <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Your Name</label>
-                               <input required className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base" placeholder="Mark H." />
+                               <input required name="name" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base" placeholder="Mark H." />
                             </div>
                          </div>
                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Work Email</label>
-                            <input required type="email" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base" placeholder="mark@hargraves.com.au" />
+                            <input required name="email" type="email" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base" placeholder="mark@hargraves.com.au" />
                          </div>
                          <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
                                <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Active Projects</label>
-                               <select className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base">
+                               <select name="activeProjects" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base">
                                   <option>1-2 Projects</option>
                                   <option>3-8 Projects</option>
                                   <option>9+ Projects</option>
@@ -83,7 +113,7 @@ export default function PilotPage() {
                             </div>
                             <div className="space-y-1.5">
                                <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Source</label>
-                               <select className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base">
+                               <select name="source" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base">
                                   <option>Buildxact Marketplace</option>
                                   <option>Search</option>
                                   <option>LinkedIn</option>
@@ -93,10 +123,13 @@ export default function PilotPage() {
                          </div>
                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Variation Pain Point (Optional)</label>
-                            <textarea className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base h-24" placeholder="What's your biggest struggle with approvals right now?" />
+                            <textarea name="painPoint" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base h-24" placeholder="What's your biggest struggle with approvals right now?" />
                          </div>
                       </div>
-                      <button type="submit" className="btn-accent w-full py-4 text-lg">Apply for the pilot</button>
+                      <button disabled={loading} type="submit" className="btn-accent w-full py-4 text-lg flex items-center justify-center gap-2">
+                        {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+                        Apply for the pilot
+                      </button>
                       <p className="text-[10px] text-text-tertiary text-center leading-relaxed">
                          By applying, you agree to our Pilot terms. We'll get back to you within 24 hours to confirm your project and schedule onboarding.
                       </p>

@@ -6,22 +6,60 @@ import { Check, Send, Loader2, ArrowRight, ShieldCheck, Mail, Smartphone, Clock,
 export default function DemoPage() {
   const [step, setStep] = useState(1); // 1: Calendar, 2: Details, 3: Success
   const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleTimeSelect = (time: string) => {
+  const now = new Date();
+  const currentMonth = now.toLocaleString('default', { month: 'long' });
+  const currentYear = now.getFullYear();
+
+  const getFormattedDate = (day: number) => {
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return `${months[now.getMonth()]} ${day}`;
+  };
+
+  const handleTimeSelect = (time: string, day: number) => {
     setSelectedTime(time);
+    setSelectedDay(day);
     setStep(2);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "demo",
+          name: formData.get("name"),
+          email: formData.get("email"),
+          scale: formData.get("scale"),
+          selectedTime: `${selectedTime} on ${getFormattedDate(selectedDay ?? 15)}`,
+        }),
+      });
+      
+      if (res.ok) {
+        setStep(3);
+      } else {
+        alert("Something went wrong. Please email william@sullivan.net.au directly.");
+      }
+    } catch (err) {
+      console.error("Demo submit error:", err);
+      alert("Network error. Please email william@sullivan.net.au directly.");
+    } finally {
       setLoading(false);
-      setStep(3);
-    }, 1500);
+    }
   };
+
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getDay(); // 0 (Sun) to 6 (Sat)
+  // Adjusted for grid starting M T W T F S S
+  const startingOffset = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
 
   return (
     <div className="w-full bg-white">
@@ -98,40 +136,56 @@ export default function DemoPage() {
                        animate={{ opacity: 1 }}
                        className="flex-1 flex flex-col"
                      >
-                       <div className="text-center mb-10 space-y-2">
+                       <div className="text-center mb-8 space-y-2">
                           <h3 className="text-2xl font-bold">Select a time</h3>
-                          <p className="text-sm text-text-secondary">Select 15 minutes that work for you.</p>
+                          <p className="text-sm text-text-secondary">{currentMonth} {currentYear}</p>
                        </div>
                        
                        <div className="flex-1 space-y-8">
                           <div className="grid grid-cols-7 text-center text-[10px] font-bold text-text-tertiary uppercase tracking-widest">
                              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span className="opacity-40">S</span><span className="opacity-40">S</span>
                           </div>
-                          <div className="grid grid-cols-7 gap-y-6 text-center text-sm font-bold">
-                             {Array.from({ length: 31 }).map((_, i) => (
-                               <button 
-                                 key={i} 
-                                 className={`p-2 rounded-lg transition-colors ${i === 14 ? 'bg-amber-base text-white hover:bg-amber-dark' : 'text-text-primary hover:bg-bg-tinted'}`}
-                               >
-                                  {i + 1}
-                               </button>
+                          <div className="grid grid-cols-7 gap-y-2 text-center text-sm font-bold">
+                             {Array.from({ length: startingOffset }).map((_, i) => (
+                               <div key={`offset-${i}`}></div>
                              ))}
+                             {Array.from({ length: daysInMonth }).map((_, i) => {
+                               const day = i + 1;
+                               const dayOfWeek = (day + startingOffset - 1) % 7;
+                               const isWeekend = dayOfWeek >= 5;
+                               return (
+                                 <button 
+                                   key={day} 
+                                   disabled={isWeekend}
+                                   onClick={() => setSelectedDay(day)}
+                                   className={`p-2 rounded-lg transition-colors ${selectedDay === day ? 'bg-amber-base text-white' : isWeekend ? 'opacity-20 cursor-not-allowed' : 'text-text-primary hover:bg-bg-tinted'}`}
+                                 >
+                                    {day}
+                                 </button>
+                               );
+                             })}
                           </div>
                           
-                          <div className="space-y-4 pt-8 border-t border-bg-tinted">
-                             <div className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Morning Slots</div>
-                             <div className="grid grid-cols-3 gap-2 text-xs font-bold">
-                                {["08:15 AM", "09:30 AM", "11:45 AM"].map(time => (
-                                   <button 
-                                     key={time} 
-                                     onClick={() => handleTimeSelect(time)}
-                                     className="py-2 border border-border-light rounded hover:border-amber-base hover:text-amber-base transition-colors"
-                                   >
-                                      {time}
-                                   </button>
-                                ))}
-                             </div>
-                          </div>
+                          {selectedDay && (
+                            <motion.div 
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="space-y-4 pt-8 border-t border-bg-tinted"
+                            >
+                               <div className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Morning Slots for {getFormattedDate(selectedDay)}</div>
+                               <div className="grid grid-cols-3 gap-2 text-xs font-bold">
+                                  {["08:15 AM", "09:30 AM", "11:45 AM"].map(time => (
+                                     <button 
+                                       key={time} 
+                                       onClick={() => handleTimeSelect(time, selectedDay)}
+                                       className="py-2 border border-border-light rounded hover:border-amber-base hover:text-amber-base transition-colors"
+                                     >
+                                        {time}
+                                     </button>
+                                  ))}
+                               </div>
+                            </motion.div>
+                          )}
                        </div>
                      </motion.div>
                    )}
@@ -150,20 +204,20 @@ export default function DemoPage() {
                         </button>
                         <div className="mb-10">
                            <h3 className="text-2xl font-bold mb-2">Your details</h3>
-                           <p className="text-sm text-text-secondary">Booking for <span className="text-amber-base font-bold">{selectedTime} on May 15th</span></p>
+                           <p className="text-sm text-text-secondary">Booking for <span className="text-amber-base font-bold">{selectedTime} on {getFormattedDate(selectedDay ?? 1)}</span></p>
                         </div>
                         <form onSubmit={handleFormSubmit} className="space-y-6">
                            <div className="space-y-2">
                               <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Full Name</label>
-                              <input required type="text" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors" placeholder="Dave Smith" />
+                              <input required name="name" type="text" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors" placeholder="Dave Smith" />
                            </div>
                            <div className="space-y-2">
                               <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Company Email</label>
-                              <input required type="email" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors" placeholder="dave@company.com.au" />
+                              <input required name="email" type="email" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors" placeholder="dave@company.com.au" />
                            </div>
                            <div className="space-y-2">
                               <label className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">Construction Scale</label>
-                              <select className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors">
+                              <select name="scale" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 outline-none focus:border-amber-base transition-colors">
                                  <option>1-5 Homes / Year</option>
                                  <option>5-20 Homes / Year</option>
                                  <option>20-100 Homes / Year</option>
@@ -192,14 +246,14 @@ export default function DemoPage() {
                         </div>
                         <h3 className="text-3xl font-extrabold tracking-tightest">You're in.</h3>
                         <p className="text-text-secondary max-w-xs mx-auto">
-                           We've sent a calendar invitation for {selectedTime} on May 15th to your email. Check your inbox (and spam just in case).
+                           We've sent a calendar invitation for {selectedTime} on {getFormattedDate(selectedDay ?? 1)} to your email. Check your inbox (and spam just in case).
                         </p>
                         <Link to="/" className="text-amber-base font-bold hover:underline pt-10">Back to homepage</Link>
                      </motion.div>
                    )}
 
                    <p className="mt-10 text-xs text-text-tertiary text-center leading-relaxed">
-                      Prefer email? Contact us at <a href="mailto:demo@siteforge.app" className="text-text-primary font-bold">demo@siteforge.app</a>
+                      Prefer email? Contact us at <a href="mailto:william@sullivan.net.au" className="text-text-primary font-bold">william@sullivan.net.au</a>
                    </p>
                 </div>
              </div>
@@ -213,7 +267,7 @@ export default function DemoPage() {
                      </div>
                    ))}
                 </div>
-                <div className="text-[10px] font-bold text-text-primary uppercase tracking-widest">Mark H. booked 2h ago</div>
+                <div className="text-[10px] font-bold text-text-primary uppercase tracking-widest">Mark H. booked recently</div>
              </div>
           </div>
         </div>

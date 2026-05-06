@@ -95,7 +95,7 @@ export default function PrivacyPage() {
         <div className="max-w-3xl mx-auto space-y-8">
            <Mail className="w-12 h-12 text-amber-base mx-auto" />
            <h2 className="text-3xl font-bold">Privacy Questions?</h2>
-           <p className="text-text-secondary">Our Data Protection Officer can be reached at <span className="font-bold text-text-primary">privacy@siteforge.app</span></p>
+           <p className="text-text-secondary">Our Data Protection Officer can be reached at <span className="font-bold text-text-primary">william@sullivan.net.au</span></p>
            <div className="flex justify-center pt-8">
               <Link to="/demo" className="btn-secondary py-4 px-10 text-lg">Download Full Privacy Policy</Link>
            </div>
