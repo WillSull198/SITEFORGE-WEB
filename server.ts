@@ -15,63 +15,81 @@ async function startServer() {
   app.use(cors({ origin: process.env.APP_URL || "http://localhost:3000" }));
   app.use(express.json());
 
-  // API Route for contact form
+  // Send email helper
+  async function sendLeadEmail(subject: string, bodyLines: string[]) {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const html = `
+      <div style="font-family:sans-serif;max-width:600px;padding:24px">
+        <h2 style="color:#D97706">${subject}</h2>
+        <table style="width:100%;border-collapse:collapse">
+          ${bodyLines.map(line => `<tr><td style="padding:8px 0;border-bottom:1px solid #eee">${line}</td></tr>`).join("")}
+        </table>
+        <p style="color:#888;font-size:12px;margin-top:24px">Sent from SiteForge website</p>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: `"SiteForge Website" <${process.env.EMAIL_USER}>`,
+      to: "william@sullvan.net.au",
+      replyTo: undefined,
+      subject,
+      html,
+    });
+  }
+
+  // API Route for contact/demo/pilot forms
   app.post("/api/contact", async (req, res) => {
     try {
-      const { 
-        name, 
-        email, 
-        company, 
-        message, 
-        formType, 
-        selectedTime, 
-        scale, 
-        activeProjects, 
-        source, 
-        painPoint 
-      } = req.body;
+      const { formType, name, email, company, message, selectedTime, scale, activeProjects, source, painPoint } = req.body;
 
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
+      let subject = "";
+      let lines: string[] = [];
 
-      const subject = formType === "pilot"
-        ? `New Pilot Application — ${company || name}`
-        : formType === "demo"
-        ? `New Demo Booking — ${name} (${selectedTime})`
-        : `New Contact Form Submission — ${name}`;
+      if (formType === "demo") {
+        subject = `🗓 New Demo Booking — ${name}`;
+        lines = [
+          `<b>Type:</b> Demo Booking`,
+          `<b>Name:</b> ${name || "—"}`,
+          `<b>Email:</b> <a href="mailto:${email}">${email || "—"}</a>`,
+          `<b>Selected Time:</b> ${selectedTime || "—"}`,
+          `<b>Construction Scale:</b> ${scale || "—"}`,
+        ];
+      } else if (formType === "pilot") {
+        subject = `🚀 New Pilot Application — ${company || name}`;
+        lines = [
+          `<b>Type:</b> Pilot Application`,
+          `<b>Company:</b> ${company || "—"}`,
+          `<b>Name:</b> ${name || "—"}`,
+          `<b>Email:</b> <a href="mailto:${email}">${email || "—"}</a>`,
+          `<b>Active Projects:</b> ${activeProjects || "—"}`,
+          `<b>Lead Source:</b> ${source || "—"}`,
+          `<b>Pain Point:</b> ${painPoint || "—"}`,
+        ];
+      } else {
+        subject = `📩 New Contact — ${name}`;
+        lines = [
+          `<b>Name:</b> ${name || "—"}`,
+          `<b>Email:</b> <a href="mailto:${email}">${email || "—"}</a>`,
+          `<b>Company:</b> ${company || "—"}`,
+          `<b>Message:</b> ${message || "—"}`,
+        ];
+      }
 
-      const html = `
-        <h2>New ${formType || "contact"} submission from SiteForge</h2>
-        <table border="1" style="border-collapse: collapse; width: 100%; max-width: 600px;">
-          <tr><td style="padding: 8px;"><b>Name:</b></td><td style="padding: 8px;">${name || "—"}</td></tr>
-          <tr><td style="padding: 8px;"><b>Email:</b></td><td style="padding: 8px;">${email || "—"}</td></tr>
-          <tr><td style="padding: 8px;"><b>Company:</b></td><td style="padding: 8px;">${company || "—"}</td></tr>
-          ${selectedTime ? `<tr><td style="padding: 8px;"><b>Selected Time:</b></td><td style="padding: 8px;">${selectedTime}</td></tr>` : ""}
-          ${scale ? `<tr><td style="padding: 8px;"><b>Construction Scale:</b></td><td style="padding: 8px;">${scale}</td></tr>` : ""}
-          ${activeProjects ? `<tr><td style="padding: 8px;"><b>Active Projects:</b></td><td style="padding: 8px;">${activeProjects}</td></tr>` : ""}
-          ${source ? `<tr><td style="padding: 8px;"><b>Lead Source:</b></td><td style="padding: 8px;">${source}</td></tr>` : ""}
-          ${painPoint ? `<tr><td style="padding: 8px;"><b>Pain Point:</b></td><td style="padding: 8px;">${painPoint}</td></tr>` : ""}
-          ${message ? `<tr><td style="padding: 8px;"><b>Message:</b></td><td style="padding: 8px;">${message}</td></tr>` : ""}
-        </table>
-      `;
-
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: "william@sullivan.net.au",
-        replyTo: email,
-        subject,
-        html,
-      });
-
-      res.json({ success: true, message: "Lead captured successfully" });
+      await sendLeadEmail(subject, lines);
+      console.log(`[SiteForge] Email sent for ${formType}: ${name} <${email}>`);
+      res.json({ success: true });
     } catch (error) {
-      console.error("Contact API error:", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error("Email send error:", error);
+      res.status(500).json({ error: "Failed to send email" });
     }
   });
 

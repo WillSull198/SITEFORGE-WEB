@@ -30,11 +30,10 @@ export default function PilotPage() {
       if (res.ok) {
         setSubmitted(true);
       } else {
-        alert("Something went wrong. Please email william@sullivan.net.au directly.");
+        alert("Something went wrong. Please email william@sullvan.net.au directly.");
       }
-    } catch (err) {
-      console.error("Pilot submit error:", err);
-      alert("Network error. Please email william@sullivan.net.au directly.");
+    } catch {
+      alert("Network error. Please email william@sullvan.net.au directly.");
     } finally {
       setLoading(false);
     }
@@ -126,10 +125,17 @@ export default function PilotPage() {
                             <textarea name="painPoint" className="w-full bg-bg-tinted border border-border-light rounded px-4 py-3 text-sm focus:outline-none focus:border-amber-base h-24" placeholder="What's your biggest struggle with approvals right now?" />
                          </div>
                       </div>
-                      <button disabled={loading} type="submit" className="btn-accent w-full py-4 text-lg flex items-center justify-center gap-2">
-                        {loading && <Loader2 className="w-5 h-5 animate-spin" />}
-                        Apply for the pilot
-                      </button>
+                       <button type="submit" disabled={loading} className="btn-accent w-full py-4 text-lg flex items-center justify-center gap-2">
+                         {loading ? (
+                           <>
+                             <svg className="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                             </svg>
+                             Sending...
+                           </>
+                         ) : "Apply for the pilot"}
+                       </button>
                       <p className="text-[10px] text-text-tertiary text-center leading-relaxed">
                          By applying, you agree to our Pilot terms. We'll get back to you within 24 hours to confirm your project and schedule onboarding.
                       </p>

@@ -46,11 +46,10 @@ export default function DemoPage() {
       if (res.ok) {
         setStep(3);
       } else {
-        alert("Something went wrong. Please email william@sullivan.net.au directly.");
+        alert("Something went wrong. Please email william@sullvan.net.au directly.");
       }
-    } catch (err) {
-      console.error("Demo submit error:", err);
-      alert("Network error. Please email william@sullivan.net.au directly.");
+    } catch {
+      alert("Network error. Please email william@sullvan.net.au directly.");
     } finally {
       setLoading(false);
     }
@@ -253,7 +252,7 @@ export default function DemoPage() {
                    )}
 
                    <p className="mt-10 text-xs text-text-tertiary text-center leading-relaxed">
-                      Prefer email? Contact us at <a href="mailto:william@sullivan.net.au" className="text-text-primary font-bold">william@sullivan.net.au</a>
+                      Prefer email? Contact us at <a href="mailto:william@sullvan.net.au" className="text-text-primary font-bold">william@sullvan.net.au</a>
                    </p>
                 </div>
              </div>
