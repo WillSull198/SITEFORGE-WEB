@@ -1,6 +1,8 @@
 {
-  "name": "SiteForge",
-  "description": "The operations layer for AU builders. Streamline variations, approvals, and site events next to Buildxact.",
-  "requestFramePermissions": ["camera", "geolocation"],
-  "majorCapabilities": ["Full-stack", "AI-powered"]
+  "name": "SCM — Smart Construction Management",
+  "description": "Smart Construction Management platform bridging site events and commercial recovery for Australian builders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
